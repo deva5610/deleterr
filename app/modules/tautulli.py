@@ -92,9 +92,14 @@ class Tautulli:
             else "rating_key"
         )
 
-    def _prepare_activity_entry(self, entry, metadata):
-        return {
-            "last_watched": datetime.fromtimestamp(entry["stopped"]),
-            "title": metadata["title"],
-            "year": int(metadata["year"]),
-        }
+def _prepare_activity_entry(self, entry, metadata):
+    try:
+        year = int(metadata.get("year", "1900"))
+    except (TypeError, ValueError):
+        year = 1900  # Fallback to the default integer value 1900
+    
+    return {
+        "last_watched": datetime.fromtimestamp(entry["stopped"]),
+        "title": metadata.get("title", "Unknown Title"),
+        "year": year,
+    }
